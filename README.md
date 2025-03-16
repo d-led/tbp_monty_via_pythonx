@@ -8,8 +8,3 @@ mix deps.get
 mix test
 ```
 
-&darr;
-
-```shell
-Finished in 0.1 seconds (0.00s async, 0.1s sync)
-```
