@@ -13,6 +13,7 @@ defmodule TbpMontyViaPythonx do
 
   """
   def hello do
+    # based off https://github.com/thousandbrainsproject/tbp.monty/blob/main/tests/unit/object_model_test.py
     {model, _globals} = Pythonx.eval(
       """
       import numpy as np
