@@ -3,6 +3,6 @@ defmodule TbpMontyViaPythonxTest do
   doctest TbpMontyViaPythonx
 
   test "greets the world" do
-    assert TbpMontyViaPythonx.hello() == :world
+    assert TbpMontyViaPythonx.hello() == %{"num_nodes" => 3}
   end
 end
