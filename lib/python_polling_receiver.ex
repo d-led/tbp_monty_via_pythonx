@@ -7,21 +7,50 @@ defmodule PythonPollingReceiver do
   end
 
   def init(_state) do
-    Logger.info("#{__MODULE__} started")
+    Logger.info("#{__MODULE__} started, connecting...")
 
     {_, globals} =
-      Pythonx.eval("""
-      import zmq
-      import time
-      import logging
-      logging.basicConfig(level=logging.DEBUG, format="{asctime} [{levelname}] {message}", style="{")
-      context = zmq.Context()
+      Pythonx.eval(
+        """
+        import zmq
+        import time
+        context = zmq.Context()
 
-      logging.info('python: connecting to elixir')
-      socket = context.socket(zmq.PULL)
-      socket.connect("tcp://localhost:5555")
-      """,%{})
+        socket = context.socket(zmq.SUB)
+        socket.setsockopt_string(zmq.SUBSCRIBE, '')
+        # receive last message only
+        socket.setsockopt(zmq.CONFLATE, 1)
+        socket.connect("tcp://localhost:5555")
+        """,
+        %{}
+      )
+
+    Logger.info("#{__MODULE__} connected")
+
+    schedule_poll()
 
     {:ok, %{globals: globals}}
+  end
+
+  def handle_info(:recv, %{globals: globals} = state) do
+    recv(globals)
+    schedule_poll()
+    {:noreply, state}
+  end
+
+  defp schedule_poll do
+    Process.send_after(self(), :recv, 1000)
+  end
+
+  defp recv(globals) do
+    {message, _} =
+      Pythonx.eval(
+        """
+        socket.recv_string()
+        """,
+        globals
+      )
+
+    Logger.info("python: received message: #{Pythonx.decode(message)}")
   end
 end

@@ -22,7 +22,7 @@ defmodule ElixirStreamingToPythonViaZmq do
   end
 
   defp schedule_stop do
-    Process.send_after(self(), :stop, 5_000)
+    Process.send_after(self(), :stop, 7_000)
   end
 
   defp start_linked_processes do

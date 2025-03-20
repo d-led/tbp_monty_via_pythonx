@@ -4,7 +4,7 @@ defmodule ElixirStreamingProducer do
   alias :chumak, as: Chumak
 
   def start_link(_opts) do
-    GenServer.start_link(__MODULE__, %{socket: nil}, name: __MODULE__)
+    GenServer.start_link(__MODULE__, %{socket: nil, counter: 1}, name: __MODULE__)
   end
 
   def init(state) do
@@ -15,18 +15,18 @@ defmodule ElixirStreamingProducer do
     {:ok, %{state | socket: socket}}
   end
 
-  def handle_info(:push_message, %{socket: socket} = state) do
-    push_message(socket)
+  def handle_info(:push_message, %{socket: socket, counter: counter} = state) do
+    push_message(socket, counter)
     schedule_push()
-    {:noreply, state}
+    {:noreply, %{state | counter: counter + 1}}
   end
 
   defp schedule_push do
     Process.send_after(self(), :push_message, 100)
   end
 
-  defp push_message(socket) do
-    message = %{data: "example"} |> Jason.encode!()
+  defp push_message(socket, counter) do
+    message = %{counter: counter} |> Jason.encode!()
     :ok = Chumak.send(socket, message)
   end
 end
