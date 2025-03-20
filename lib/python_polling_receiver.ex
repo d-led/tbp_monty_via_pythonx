@@ -2,6 +2,8 @@ defmodule PythonPollingReceiver do
   use GenServer
   require Logger
 
+  @poll_interval_ms 1000
+
   def start_link(_opts) do
     GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
   end
@@ -25,7 +27,7 @@ defmodule PythonPollingReceiver do
         %{}
       )
 
-    Logger.info("#{__MODULE__} connected")
+    Logger.info("#{__MODULE__} connected, polling every #{@poll_interval_ms}ms")
 
     schedule_poll()
 
@@ -39,7 +41,7 @@ defmodule PythonPollingReceiver do
   end
 
   defp schedule_poll do
-    Process.send_after(self(), :recv, 1000)
+    Process.send_after(self(), :recv, @poll_interval_ms)
   end
 
   defp recv(globals) do

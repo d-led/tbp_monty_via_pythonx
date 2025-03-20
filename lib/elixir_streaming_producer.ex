@@ -3,12 +3,14 @@ defmodule ElixirStreamingProducer do
   require Logger
   alias :chumak, as: Chumak
 
+  @push_interval_ms 100
+
   def start_link(_opts) do
     GenServer.start_link(__MODULE__, %{socket: nil, counter: 1}, name: __MODULE__)
   end
 
   def init(state) do
-    Logger.info("#{__MODULE__} started")
+    Logger.info("#{__MODULE__} started, pushing every #{@push_interval_ms}ms, incrementing the counter by 1")
     {:ok, socket} = Chumak.socket(:pub)
     {:ok, _peer_pid} = Chumak.bind(socket, :tcp, ~c"*", 5555)
     schedule_push()
@@ -22,7 +24,7 @@ defmodule ElixirStreamingProducer do
   end
 
   defp schedule_push do
-    Process.send_after(self(), :push_message, 100)
+    Process.send_after(self(), :push_message, @push_interval_ms)
   end
 
   defp push_message(socket, counter) do
