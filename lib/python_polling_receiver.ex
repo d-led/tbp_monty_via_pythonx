@@ -13,9 +13,11 @@ defmodule PythonPollingReceiver do
       Pythonx.eval("""
       import zmq
       import time
+      import logging
+      logging.basicConfig(level=logging.DEBUG, format="{asctime} [{levelname}] {message}", style="{")
       context = zmq.Context()
 
-      print('python: connecting to elixir')
+      logging.info('python: connecting to elixir')
       socket = context.socket(zmq.PULL)
       socket.connect("tcp://localhost:5555")
       """,%{})
