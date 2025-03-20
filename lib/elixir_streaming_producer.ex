@@ -26,7 +26,7 @@ defmodule ElixirStreamingProducer do
   end
 
   defp push_message(socket, counter) do
-    message = %{counter: counter} |> Jason.encode!()
+    message = %{counter: counter, random_number: :rand.uniform(100)} |> Jason.encode!()
     :ok = Chumak.send(socket, message)
   end
 end
