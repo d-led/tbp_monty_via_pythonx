@@ -7,6 +7,7 @@ config :pythonx, :uv_init,
   version = "0.0.0"
   requires-python = "==3.10.*"
   dependencies = [
-    "tbp.monty @ git+https://github.com/thousandbrainsproject/tbp.monty.git"
+    "tbp.monty @ git+https://github.com/thousandbrainsproject/tbp.monty.git",
+    "pyzmq"
   ]
   """
