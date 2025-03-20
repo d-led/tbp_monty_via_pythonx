@@ -20,3 +20,4 @@ mix run --no-halt
 
 - producer: [lib/elixir_streaming_producer.ex](lib/elixir_streaming_producer.ex)
 - consumer: [lib/python_polling_receiver.ex](lib/python_polling_receiver.ex)
+  - the consumer is driven from Elixir but it is decoupled via ZeroMQ and could be in a separate codebase altogether
