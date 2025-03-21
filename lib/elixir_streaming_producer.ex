@@ -10,7 +10,10 @@ defmodule ElixirStreamingProducer do
   end
 
   def init(state) do
-    Logger.info("#{__MODULE__} started, pushing every #{@push_interval_ms}ms, incrementing the counter by 1")
+    Logger.info(
+      "#{__MODULE__} started, pushing every #{@push_interval_ms}ms, incrementing the counter by 1"
+    )
+
     {:ok, socket} = Chumak.socket(:pub)
     {:ok, _peer_pid} = Chumak.bind(socket, :tcp, ~c"*", 5555)
     schedule_push()

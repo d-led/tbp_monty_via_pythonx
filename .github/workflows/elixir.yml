@@ -35,11 +35,7 @@ jobs:
     - name: Install dependencies
       run: mix deps.get
     - name: Run tests
-      run: mix test
-      env:
-        MKL_NUM_THREADS: 1
-        NUMEXPR_NUM_THREADS: 1
-        OMP_NUM_THREADS: 1
+      run: scripts/tets.sh
     - name: Run the demo
-      run: mix run --no-halt
+      run: scripts/demo.sh
   
