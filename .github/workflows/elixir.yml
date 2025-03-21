@@ -18,14 +18,17 @@ jobs:
   build:
 
     name: Build and test
-    runs-on: macos-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - uses: actions/checkout@v4
-    - name: Install Elixir
-      run: |
-        brew update
-        brew install elixir bash
+    - name: Set up Elixir
+      uses: erlef/setup-beam@v1
+      env:
+        ImageOS: ubuntu22
+      with:
+        elixir-version: '1.18' # [Required] Define the Elixir version
+        otp-version: '27'      # [Required] Define the Erlang/OTP version
     - name: Restore dependencies cache
       uses: actions/cache@v3
       with:
@@ -35,7 +38,7 @@ jobs:
     - name: Install dependencies
       run: mix deps.get
     - name: Run tests
-      run: scripts/tets.sh
+      run: ./scripts/tets.sh
     - name: Run the demo
-      run: scripts/demo.sh
+      run: ./scripts/demo.sh
   
